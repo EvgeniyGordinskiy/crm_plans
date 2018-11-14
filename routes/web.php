@@ -11,6 +11,9 @@
 |
 */
 
+Route::get('/users', function () {
+    return view('pages.users');
+});
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
