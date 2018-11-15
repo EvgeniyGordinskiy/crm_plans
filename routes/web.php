@@ -15,5 +15,5 @@ Route::get('/users', function () {
     return view('pages.users');
 });
 Route::get('/', function () {
-    return view('index');
+    return view('layouts.index');
 });

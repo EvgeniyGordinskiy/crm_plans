@@ -13,6 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ *
+ * Routes for Plans
+ *
+ */
+
+Route::group([
+    'as' => 'plans.',
+    'prefix' => 'plans',
+], function(){
+    Route::get('', ['as' => 'index', 'uses' => 'PlansController@index']);
 });

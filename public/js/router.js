@@ -1,18 +1,43 @@
 
-import Load from './loader.js'
+const routes = {
+    plans: {
+        route: 'plans',
+        js: 'js/pages/plan.js',
+        css: 'css/pages/plan.css'
+    },
+    users: {
+        route: 'users',
+        js: 'js/pages/user.js',
+        css: 'css/pages/user.css'
+    },
+};
 
-export default class Router {
-    constructor(app) {
-        console.log(app);
-        console.log(Router.pages);
-        if (Object.keys(Router.pages).length > 0) {
-            this.redirect(Router.pages[Object.keys(Router.pages)[0]]);
-        }
+
+class Router {
+    constructor() {
+        this.url = '';
+        this.redirect('plans');
     }
 
     redirect(page) {
-        if (page.route && page.js) {
-            Load.loadVew(page);
+        if (Object.keys(routes).includes(page)) {
+            this.url += routes[page].route;
+            $.app.get('loader').loadVew(this.url);
+            $.app.get('loader').insertJsAndCSSFiles(routes[page]);
+        } else {
+            console.log('Page not Found');
         }
     }
+
+    changePage(title, html){
+        document.title = title;
+        window.history.pushState({"html": html, "pageTitle":title},"", '#/'+title);
+    }
 }
+
+window.onpopstate = function(e){
+    if(e.state){
+        $.app.pageContainer.html(e.state.html);
+        document.title = e.state.pageTitle;
+    }
+};
