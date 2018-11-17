@@ -15,14 +15,13 @@ const routes = {
 
 class Router {
     constructor() {
-        this.url = '';
         this.redirect('plans');
     }
 
     redirect(page) {
+        console.log(page);
         if (Object.keys(routes).includes(page)) {
-            this.url += routes[page].route;
-            $.app.get('loader').loadVew(this.url);
+            $.app.get('loader').request(routes[page].route);
             $.app.get('loader').insertJsAndCSSFiles(routes[page]);
         } else {
             console.log('Page not Found');
@@ -30,8 +29,8 @@ class Router {
     }
 
     changePage(title, html){
-        document.title = title;
-        window.history.pushState({"html": html, "pageTitle":title},"", '#/'+title);
+        document.title = $.app.get('helper').ucfirst(title);
+        window.history.pushState({"html": html, "pageTitle":$.app.get('helper').ucfirst(title)},"", '#/'+title);
     }
 }
 

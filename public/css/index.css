@@ -19,7 +19,21 @@ html { height: 100%;}
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
 }
-
+a:hover{
+    cursor:pointer;
+}
+input:disabled, textarea:disabled, select:disabled{
+    background-color: transparent !important;
+    cursor: default !important;
+    border: none;
+    box-shadow: none;
+    font-style: italic;
+}
+select:disabled {
+    -moz-appearance: none;
+    /* for Chrome */
+    -webkit-appearance: none;
+}
 #app.toggled {
     padding-left: 220px;
 }
@@ -293,4 +307,92 @@ html { height: 100%;}
     bottom: 0;
     background-color: rgba(250,250,250,.8);
     z-index: 1;
+}
+
+.buttons-block-edit {
+    display: flex;
+    width: 133px;
+    justify-content: space-between;
+}
+.buttons-block-edit > h5 {
+    align-self: center;
+    margin-right: 10px;
+}
+.buttons-block-edit > .buttons-block-edit-active {
+    display: none;
+}
+.buttons-block-edit > button, .buttons-block-edit > .buttons-block-edit-active > button {
+    width: 23px;
+    height: 25px;
+    background-color: transparent;
+    color: #357ebd;
+    border: none;
+}
+.buttons-block-edit > button:focus, .buttons-block-edit > .buttons-block-edit-active > button:focus {
+    outline-style: none !important;
+}
+.buttons-block-edit > button:hover, .buttons-block-edit > .buttons-block-edit-active > button:hover {
+    border-radius: 50%;
+}
+.buttons-block-edit > button > span, .buttons-block-edit > .buttons-block-edit-active > button > span{
+    right: 7px;
+    top: -1px;
+}
+.edit-plan-modal form, .edit-plan-modal .form-group {
+    margin-bottom: 0;
+}
+.edit-plan-modal .modal-header {
+    padding-bottom: 0;
+}
+.edit-plan-modal-days, .edit-plan-modal-exercises{
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+.edit-plan-modal-days > button, .edit-plan-modal-exercises > button{
+    margin-top: 10px;
+    color: #449d44;
+    -webkit-transition: all 0.25s ease-out; /* Safari */
+    transition: all 0.25s ease-out;
+}
+.edit-plan-modal-days > button:focus, .edit-plan-modal-exercises > button:focus{
+    outline-style: none !important;
+    background-color: #449d44;
+    color: white
+    /*outline-color: #449d44;*/
+}
+.edit-plan-modal-days{
+    border-right: 1px solid #e5e5e5;
+}
+.edit-plan-modal-modal-body{
+    height: 370px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+
+.day{
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.day .form-group{
+    border-bottom: 1px solid #e5e5e5;
+    padding: 5px 7px
+}
+.day .form-group input{
+    width: 70%;
+    height: 30px;
+}
+.day .form-group > .buttons-block-edit{
+    position: absolute;
+    right: 0;
+    margin-top: 3px;
+    justify-content: center;
+}
+.day > .day-exercises{
+    padding: 4px 15px 15px 15px;
+
 }

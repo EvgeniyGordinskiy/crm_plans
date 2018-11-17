@@ -25,8 +25,14 @@ class App {
              }
              return this.instances['router'];
          }
+         case 'helper': {
+             if (!this.instances['helper']) {
+                 this.instances['helper'] = new Helper();
+             }
+             return this.instances['helper'];
+         }
      }
-    }
+   }
 }
 
 $.app = new App();

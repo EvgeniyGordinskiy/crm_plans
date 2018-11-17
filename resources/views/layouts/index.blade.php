@@ -11,15 +11,15 @@
     <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
         <ul class="nav sidebar-nav">
             <li class="sidebar-brand">
-                <a href="#">
+                <a>
                     Brand
                 </a>
             </li>
             <li>
-                <a href="#">Plans</a>
+                <a onclick="$.app.get('router').redirect('plans')">Plans</a>
             </li>
             <li>
-                <a href="#">Users</a>
+                <a onclick="$.app.get('router').redirect('users')">Users</a>
             </li>
         </ul>
     </nav>
@@ -40,7 +40,9 @@
 <script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script><script src="{{ asset('js/router.js')}}"></script>
+        crossorigin="anonymous"></script>
+<script src="{{ asset('js/helpers.js')}}"></script>
+<script src="{{ asset('js/router.js')}}"></script>
 <script src="{{ asset('js/loader.js')}}"></script>
 <script src="{{ asset('js/App.js')}}"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
