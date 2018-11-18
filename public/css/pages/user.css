@@ -1,0 +1,22 @@
+.load-users-classes, .load-all-classes{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: absolute;
+    margin-top: 11px;
+    right: 35px;
+}
+.load-users-classes{
+    display: none;
+}
+
+.invite-to-plan{
+    width: 90%;
+    height: 25px;
+    margin-left: 15px;
+    margin-top: 11px;
+}
+.invite-to-plan > span{
+    position: relative;
+    bottom: 4px;
+}

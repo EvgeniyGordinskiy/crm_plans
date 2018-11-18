@@ -5,6 +5,7 @@ use App\Contracts\Invite\HandlerForImplementationInterface;
 use App\Contracts\Invite\HandlerForSendingInterface;
 use App\Contracts\Invite\InviteServiceInterface;
 use App\Contracts\ModalHasNameInterface;
+use App\Http\Controllers\PlansController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SubscriptionController;
@@ -15,6 +16,7 @@ use App\Models\Message;
 use App\Models\Messages\InviteUserToFamilyMessage;
 use App\Models\Messages\RequestToTheLimitedClassMessage;
 use App\Models\ParentUser;
+use App\Models\Plan;
 use App\Models\School;
 use App\Models\User;
 use App\Services\Verification\Handlers\EmailInviteVerificationHandler;
@@ -23,36 +25,13 @@ use Psy\Util\Json;
 
 class InviteService// implements InviteServiceInterface
 {
-    const FAMILY_MODEL_NAME = ParentUser::class;
-    const FAMILY_MODELS_METHOD = 'addUserToFamily';
-    const SCHOOL_CONTROLLER_METHOD = 'add_user_to_school';
-    const SCHOOL_CONTROLLER_NAME = SchoolController::class;
-    const PROGRAM_CONTROLLER_NAME = ProgramController::class;
-    const PROGRAM_CONTROLLER_METHOD = 'add_user_to_program';
-    const SCHOOL_MODELS_METHOD_REQUEST = AddUserToFamily::class;
-
-    const REQUEST_LIMITED_CLASS_CONTROLLER_METHOD = 'add_user';
-    const REQUEST_LIMITED_CLASS_CONTROLLER_NAME = SubscriptionController::class;
+    const PLAN_CONTROLLER_METHOD = 'add_user';
+    const PLAN_CONTROLLER_NAME = PlansController::class;
 
     public function create(User $recipient, User $sender, InviteType $invite_type, array $params = [])
     {
         $invite = new Invite();
         switch ($invite_type->name) {
-            case InviteType::FAMILY: {
-                $message = new InviteUserToFamilyMessage($recipient, $sender);
-                EmailInviteVerificationHandler::$email_body = $message->body;
-                if($message->save()) {
-                    $invite->model_name = self::FAMILY_MODEL_NAME;
-                    $invite->model_method = self::FAMILY_MODELS_METHOD;
-                    $invite->recipient_id = $recipient->id;
-                    $invite->message_id = $message->id;
-                    $invite->params = Json::encode($params);
-                    $invite->parent_id = $sender->id;
-                    $invite->save();
-                    VerificationService::setPlayload(['invite_id' => $invite->id, 'parent_id' => $sender->id]);
-                }
-                break;
-            }
             case InviteType::PROGRAM: {
                 InviteUserToFamilyMessage::$message_template_name = 'program';
                 if (!$params['program_name'] || !$params['program_id']) {

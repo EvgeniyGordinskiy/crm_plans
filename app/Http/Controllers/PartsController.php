@@ -1,9 +1,13 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Part\ChangeOrderRequest;
 use App\Models\Exercise;
+use App\Models\ExerciseInstances;
 use App\Models\Plan;
 use App\Models\PlanDays;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 Class PartsController extends Controller
 {
@@ -37,9 +41,63 @@ Class PartsController extends Controller
 
     public function edit_plan($plan_id)
     {
-        $plan = Plan::whereId($plan_id)->firstOrFail();
-        $days = PlanDays::wherePlanId($plan_id)->get();
-        $view = view('parts.modals.edit-plan', compact('plan', 'days'))->render();
+        $item = Plan::whereId($plan_id)->firstOrFail();
+        $days = $item->get_days_with_exercises();
+        $exercises = Exercise::all();
+        $source = 'plan';
+        $view = view('parts.modals.edit-plan', compact('item', 'days', 'exercises', 'source'))->render();
+        return $this->respondWithData($view);
+    }
+
+    public function edit_user($user_id)
+    {
+        $item = User::whereId($user_id)->firstOrFail();
+        $plans = $item->plans;
+        $source = 'user';
+        $view = view('parts.modals.edit-plan', compact('item', 'plans', 'source'))->render();
+        return $this->respondWithData($view);
+    }
+
+    public function change_order(ChangeOrderRequest $request)
+    {
+        if ($request->resource === 'day') {
+            $item = PlanDays::whereId($request->item_id)->firstOrFail();
+            $indexAfter = PlanDays::whereId($request->after_item_id)->first();
+            $indexBefore = PlanDays::whereId($request->before_item_id)->first();
+        } else if ($request->resource === 'exercise') {
+            $item = ExerciseInstances::whereId($request->item_id)->firstOrFail();
+            $indexAfter = ExerciseInstances::whereId($request->after_item_id)->first();
+            $indexBefore = ExerciseInstances::whereId($request->before_item_id)->first();
+        } else {
+            return $this->respondWithError();
+        }
+        if ($indexAfter && $indexBefore) {
+            $diff = $indexAfter->order  -  $indexBefore->order;
+            $newIndex = $indexAfter->order - intval($diff/2*1.3);
+            $item->update(['order' => $newIndex]);
+        } else if ($indexBefore) {
+            $item->update(['order' => $indexBefore->order + 1008008]);
+        } else if ($indexAfter) {
+            $item->update(['order' => $indexAfter->order  - 10000]);
+        }
+
+        if ($request->resource === 'day') {
+            $days = (new Plan())->get_days_with_exercises($request->parent_id);
+            $view = view('parts.day', compact('days'))->render();
+        }
+        if ($request->resource === 'exercise') {
+            $exercises = (new PlanDays())->day_exercises($request->parent_id);
+            $view = view('parts/exercise', compact('exercises'))->render();
+        }
+        return $this->respondWithData($view);
+    }
+
+    public function confirm_modal($source, $id)
+    {
+        if (!$source || !$id) {
+            throw new \Exception('Missed required params');
+        }
+        $view = view('parts.modals.confirm', compact('source', 'id'))->render();
         return $this->respondWithData($view);
     }
 }

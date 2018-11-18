@@ -10,7 +10,7 @@
                 {{--</button>--}}
             </div>
             <div class="modal-body">
-                <form class="plan-details-modal-form">
+                <form class="plan-details-modal-form" onsubmit="return false">
                     <div class="form-group">
                         <label for="name" class="col-form-label">Name:</label>
                         <input oninput="$.app.get('helper').clearError($('.plan-details-modal-form'), 'name')"
@@ -18,7 +18,16 @@
                                name="name"
                                value="{{$item->day_name ?? $item->exercise_name ?? ''}}">
                     </div>
-                    @if ($source !== 'day')
+                    @if ($source === 'user')
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">Email:</label>
+                            <input oninput="$.app.get('helper').clearError($('.plan-details-modal-form'), 'email')"
+                                   type="text" class="form-control"
+                                   name="email"
+                                   value="{{$item->email ?? ''}}">
+                        </div>
+                    @endif
+                    @if ($source !== 'day' && $source !== 'exercise' && $source !== 'user')
                         <div class="form-group">
                             <label for="description" class="col-form-label">Description:</label>
                             <textarea oninput="$.app.get('helper').clearError($('.plan-details-modal-form'), 'description')"
@@ -44,7 +53,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('.plan-details-modal').remove()">Close</button>
                 <button type="button" class="btn btn-primary" onclick="saveForm('{{$source}}', '.plan-details-modal-form', '{{$type}}',
-                {{$type === 'edit' ? $item->id : 'false'}}, {{$source === 'day' ? $plan_id : null}})">Save</button>
+                {{$type === 'edit' ? $item->id : 'false'}}, {{$source === 'day' || $source === 'exercise'? $plan_id : null}})">Save</button>
             </div>
         </div>
     </div>

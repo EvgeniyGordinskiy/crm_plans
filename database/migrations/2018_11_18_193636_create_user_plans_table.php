@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePlanDaysTable extends Migration
+class CreateUserPlansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreatePlanDaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('plan_days', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('user_plans', function (Blueprint $table) {
+            $table->integer('user_id', false, true);
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('plan_id', false, true);
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
-            $table->string('day_name')->default('');
-            $table->integer('order')->default(0);
         });
     }
 
@@ -29,6 +28,6 @@ class CreatePlanDaysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_days');
+        Schema::dropIfExists('user_plans');
     }
 }

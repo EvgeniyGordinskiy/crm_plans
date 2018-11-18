@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Exercise extends Model
+class UserPlans extends Model
 {
+    protected $table = 'user_plans';
     protected $guarded = [];
     public $timestamps = false;
-
 }

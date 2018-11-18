@@ -1,6 +1,6 @@
 
 class Load {
-    request(page, data = {}, parent = null, method = 'get', callback = null, callbackError = null, append = true) {
+    request(page, data = {}, parent = null, method = 'get', callback = null, callbackError = null, append = true, removeBefore = null) {
         console.log(data);
         $.ajax({
             url: '/api/'+page,
@@ -8,16 +8,18 @@ class Load {
             data: data,
             success: function(res) {
                 console.log(res);
-                console.log(append);
+                console.log(append, removeBefore);
                 if (append === true) {
                     if (parent && $(parent)) {
-                        $(parent).append(res.data);
-                    } else {
-                        if (page === 'plans') {
-                            console.log(page);
-                            $.app.pageContainer.html(res.data);
-                            $.app.get('router').changePage(page, res.data)
+                        if (removeBefore) {
+                            $(parent).find(removeBefore).remove();
+                            $(parent).append(res.data);
+                        } else {
+                            $(parent).append(res.data);
                         }
+                    } else {
+                        $.app.pageContainer.html(res.data);
+                        $.app.get('router').changePage(page, res.data)
                     }
                 }
                 if (callback) {

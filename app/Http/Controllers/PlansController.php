@@ -4,14 +4,31 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Plan\CreatePlanRequest;
 use App\Http\Requests\Plan\EditPlanRequest;
 use App\Models\Plan;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class PlansController extends Controller
 {
     public function index()
     {
-        $plans =  DB::table('plans')->paginate(15);
+        $plans =  DB::table('plans')->get();
         $view = view('pages.plans', ['plans' => $plans])->render();
+        return $this->respondWithData($view);
+    }
+
+    public function preview($user_id = null)
+    {
+        $plans =  Plan::all();
+        $view = view('parts.plan-view-body', ['plans' => $plans, 'user_id' => $user_id])->render();
+        return $this->respondWithData($view);
+    }
+
+
+    public function users_plans($user_id)
+    {
+        $user = User::whereId($user_id)->firstOrFail();
+        $plans =  $user->plans;
+        $view = view('parts.plan-view-body', ['plans' => $plans])->render();
         return $this->respondWithData($view);
     }
 
@@ -51,4 +68,10 @@ class PlansController extends Controller
         return $this->respondWithData($view);
     }
 
+    public function delete($id)
+    {
+        $plan = Plan::whereId($id)->firstOrFail();
+        $plan->delete();
+        return $this->respondWithSuccess('ok');
+    }
 }

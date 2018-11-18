@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Day;
+namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseRequest;
 
-class CreateDayRequest extends BaseRequest
+class CreateUserRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,9 +20,8 @@ class CreateDayRequest extends BaseRequest
     protected function prepareForValidation()
     {
         $this->replace([
-            'day_name' => $this->sanitizeString('day_name'),
-            'id' => $this->input('id'),
-            'plan_id' => $this->input('plan_id'),
+            'user_name' => $this->sanitizeString('user_name'),
+            'user_email' => $this->input('user_email'),
         ]);
     }
 
@@ -35,9 +34,8 @@ class CreateDayRequest extends BaseRequest
     public function rules()
     {
         return [
-            'id' => 'nullable|exists:plan_days,id',
-            'plan_id' => 'nullable|exists:plans,id',
-            'day_name' => 'required|string|max:190',
+            'user_name' => 'required|max:191',
+            'user_email' => 'required|email'
         ];
     }
 }

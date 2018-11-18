@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Plan;
+namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CreatePlanRequest extends BaseRequest
+class EditUserRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,10 +21,9 @@ class CreatePlanRequest extends BaseRequest
     protected function prepareForValidation()
     {
         $this->replace([
-            'plan_name' => $this->sanitizeString('plan_name'),
-            'plan_description' => $this->sanitizeString('plan_description'),
+            'user_name' => $this->sanitizeString('user_name'),
             'id' => $this->input('id'),
-            'plan_difficulty' => $this->input('plan_difficulty'),
+            'user_email' => $this->input('user_email'),
         ]);
     }
 
@@ -35,10 +35,9 @@ class CreatePlanRequest extends BaseRequest
     public function rules()
     {
         return [
-            'id' => 'nullable|exists:plans,id',
-            'plan_name' => 'required|string|max:190',
-            'plan_description' => 'required|string|max:190',
-            'plan_difficulty' => 'required|in:1,2,3'
+            'id' => 'required|exists:users,id',
+            'user_name' => 'nullable|string|max:190',
+            'user_email' => 'nullable|email',
         ];
     }
 }

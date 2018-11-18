@@ -2,12 +2,10 @@
 const routes = {
     plans: {
         route: 'plans',
-        js: 'js/pages/plan.js',
         css: 'css/pages/plan.css'
     },
     users: {
         route: 'users',
-        js: 'js/pages/user.js',
         css: 'css/pages/user.css'
     },
 };
@@ -15,7 +13,20 @@ const routes = {
 
 class Router {
     constructor() {
-        this.redirect('plans');
+        console.log(window.location);
+        const currentPage = window.location.href.substr(window.location.href.indexOf('#')+2);
+        console.log(currentPage);
+        let found = false;
+        Object.keys(routes).map(function(key){
+           if (routes[key].route === currentPage) {
+               found = true;
+           }
+        });
+        if (!found) {
+            this.redirect('plans');
+        } else {
+            this.redirect(currentPage);
+        }
     }
 
     redirect(page) {
