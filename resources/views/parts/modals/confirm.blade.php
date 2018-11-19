@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    Delete {{$source === 'exercise_inst' ? 'exercise from day' : $source}}?
+                    Delete {{$source === 'exercise_inst' ? 'exercise from day' : $source === 'user_plan'? 'users plan' : $source}}?
                 </h5>
             </div>
             <div class="modal-footer">

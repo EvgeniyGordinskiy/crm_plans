@@ -53,6 +53,9 @@ Class PartsController extends Controller
     {
         $item = User::whereId($user_id)->firstOrFail();
         $plans = $item->plans;
+        foreach($plans as $plan) {
+            $plan->user_id = intval($user_id);
+        }
         $source = 'user';
         $view = view('parts.modals.edit-plan', compact('item', 'plans', 'source'))->render();
         return $this->respondWithData($view);

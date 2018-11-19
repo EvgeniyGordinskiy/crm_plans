@@ -35,7 +35,11 @@ class UsersController extends Controller
         if ($request->user_name) {
             $data['name'] = $request->user_name;
         }
-        if ($request->user_email) {
+        if ($request->user_email && $user->email !== $request->user_email) {
+            if (User::whereEmail($request->user_email)->first()) {
+                $this->setStatusCode(422);
+                return $this->respond(['errors' => ['user_email' => ['This email has already been taken']]]);
+            }
             $data['email'] = $request->user_email;
         }
         if ($data) {

@@ -8,6 +8,7 @@ class Load {
             data: data,
             success: function(res) {
                 console.log(res);
+                $.app.get('loader').lastResponse = res;
                 console.log(append, removeBefore);
                 if (append === true) {
                     if (parent && $(parent)) {
@@ -29,7 +30,7 @@ class Load {
             error: function(xhr) {
                 console.log(xhr);
                 if (callbackError) {
-                    callbackError();
+                    callbackError(xhr);
                 }
             }
         });

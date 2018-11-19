@@ -1,29 +1,19 @@
 <?php
 namespace App\Services\Verification\Handlers;
-
 use App\Contracts\VerificationHandler;
-use App\Http\Controllers\ClasscController;
-use App\Http\Requests\Classc\AddUserToClasscRequest;
-use App\Http\Requests\ParentUser\AddUserToFamily;
-use App\Http\Requests\Program\AddUserToProgramRequest;
-use App\Http\Requests\School\AddUserToSchoolRequest;
-use App\Http\Requests\Subscription\AddUserSubscriptionRequest;
-use App\Jobs\SendInvite;
-use App\Jobs\SendNotificationEmail;
-use App\Jobs\SendVerificationEmail;
-use App\Models\EmailConfirmations;
+use App\Http\Requests\Plan\AddUserRequest;
+use App\Mail\InviteMail;
 use App\Models\Invite;
-use App\Models\Message;
 use App\Models\User;
 use App\Models\UsersVerification;
-use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\Log;
-use PHPUnit\Util\Json;
+use Illuminate\Support\Facades\Mail;
 
 class EmailInviteVerificationHandler implements VerificationHandler
 {
 
     public static $email_body = '';
+    static $URL_TOKEN;
 
     /**
      * @param User $user
@@ -34,7 +24,9 @@ class EmailInviteVerificationHandler implements VerificationHandler
     public function send(User $user, String $token, $redirectPath)
     {
         if (!$redirectPath) return false;
-        return dispatch(new SendInvite($user, $token, self::$email_body, env('APP_FRONT_URL').'/'.$redirectPath));
+        self::$URL_TOKEN = env('APP_URL').$redirectPath.'?token='.$token;
+        return Mail::to($user->email)
+            ->send(new InviteMail($user, $token, self::$email_body, env('APP_URL').$redirectPath));
     }
 
     /**
@@ -62,27 +54,13 @@ class EmailInviteVerificationHandler implements VerificationHandler
             $object = new $class();
             $method = $invite->model_method;
             $request = false;
-            if (isset($params->parent_id)) {
-                $request =  new AddUserToFamily();
-            }
-            if (isset($params->program_id)) {
-                $request =  new AddUserToProgramRequest();
-            }
-            if (isset($params->school_id)) {
-                $request =  new AddUserToSchoolRequest();
-            }
-            if (isset($params->subscription_id)) {
-                $request =  new AddUserSubscriptionRequest();
+            if (isset($params->plan_id)) {
+                $request =  new AddUserRequest();
             }
             if ($request) {
                 $request->request->add((array) $params);
                 try{
                 $object->$method($request);
-                if (isset($params->program_id) && isset($params->class_id)) {
-                    $requestClass = new AddUserToClasscRequest();
-                    $requestClass->request->add(['classc_id' => $params->class_id, 'user_id' => $user->id]);
-                    app(ClasscController::class)->add_user_to_class($requestClass);
-                }
                 }catch(\Exception $e) {
                     Log::emergency($e->getMessage().'; line: '.$e->getLine());
                 }
@@ -91,9 +69,7 @@ class EmailInviteVerificationHandler implements VerificationHandler
             }
         }
         try{
-            $message = $invite->message;
             $invite->delete();
-            $message->delete();
             $verification->delete();
         }catch(\Exception $e) {
             Log::emergency($e->getMessage().'; line: '.$e->getLine());

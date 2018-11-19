@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\InviteType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,6 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-    }
+        \App\Models\MessagesTemplates::create([
+            'name' => InviteType::PLAN,
+            'body' => 'Hello %recipient_name%, you have been invited to the plan %plan_name%!'
+        ]);
+        InviteType::create(['name' => InviteType::PLAN]);    }
 }

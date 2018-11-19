@@ -35,7 +35,7 @@ class CreateUserRequest extends BaseRequest
     {
         return [
             'user_name' => 'required|max:191',
-            'user_email' => 'required|email'
+            'user_email' => 'required|email|unique:users,email'
         ];
     }
 }

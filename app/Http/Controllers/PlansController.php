@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Plan\AddUserRequest;
 use App\Http\Requests\Plan\CreatePlanRequest;
 use App\Http\Requests\Plan\EditPlanRequest;
 use App\Models\Plan;
 use App\Models\User;
+use App\UserPlans;
 use Illuminate\Support\Facades\DB;
 
 class PlansController extends Controller
@@ -18,7 +20,15 @@ class PlansController extends Controller
 
     public function preview($user_id = null)
     {
-        $plans =  Plan::all();
+        $usersPlans = [];
+        if ($user_id) {
+            $usersPansSubsjects = DB::select(DB::raw("SELECT plan_id as id, user_id from user_plans where user_id = $user_id"));
+            foreach ($usersPansSubsjects as $plan) {
+                $usersPlans[] = $plan->id;
+            }
+        }
+        $plans = Plan::whereNotIn('id', $usersPlans)->get();
+
         $view = view('parts.plan-view-body', ['plans' => $plans, 'user_id' => $user_id])->render();
         return $this->respondWithData($view);
     }
@@ -66,6 +76,23 @@ class PlansController extends Controller
 
         $view = view('parts.plan', ['plans' => [$plan]])->render();
         return $this->respondWithData($view);
+    }
+
+    public function add_user(AddUserRequest $request)
+    {
+        UserPlans::create([
+           'user_id' => $request->get('user_id'),
+           'plan_id' => $request->get('plan_id'),
+        ]);
+
+        return $this->respondCreated();
+    }
+
+    public function delete_user($planId, $userId)
+    {
+        $planUser = UserPlans::wherePlanId($planId)->whereUserId($userId)->firstOrFail();
+        DB::table('user_plans')->where('plan_id', $planId)->where('user_id', $userId)->delete();
+        return $this->respondWithSuccess('ok');
     }
 
     public function delete($id)

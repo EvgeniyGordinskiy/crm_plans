@@ -111,9 +111,11 @@
                 {{--<span aria-hidden="true">&times;</span>--}}
                 {{--</button>--}}
             </div>
-            <div class="modal-body edit-plan-modal-modal-body raw">
+            <div class="modal-body edit-plan-modal-modal-body">
                 @if ($source === 'plan')
+                    <div class="raw">
                     @include('parts.plan-edit-body', compact('exercises', 'item', 'exercises', 'days'))
+                        </div>
                 @endif
                 @if ($source === 'user')
                         <div class="raw plan-view-wrapper">

@@ -50,13 +50,22 @@ function saveForm(source, formSelector, type, id, planId) {
         }
     });
     if (source === 'user') {
-        rules['email'] = [
+        rules['user_email'] = [
             {
                 type: 'email'
             }
         ]
     }
     if ($.app.get('helper').validate(formSelector, rules)) {
+        const callBackError = function(e) {
+            if (e.responseJSON.errors) {
+                Object.keys(e.responseJSON.errors).map(function(input) {
+                    if ($('[name='+input+']')) {
+                        $.app.get('helper').appendError($('.plan-details-modal-form'), input.substr(input.lastIndexOf(source) + source.length + 1), e.responseJSON.errors[input][0]);
+                    }
+                });
+            }
+        }.bind(source);
         switch (type) {
             case 'create': {
                 let route =  'plans';
@@ -96,7 +105,7 @@ function saveForm(source, formSelector, type, id, planId) {
                         editPlanDays.append(buttonHtmlDay).find('p').remove();
                         $.app.get('helper').refreshDragAbleAndSortable();
                     }
-                }.bind(this, [modalCreateSelector, source, wrapper]));
+                }.bind(this, [modalCreateSelector, source, wrapper]), callBackError);
                 break;
             }
         }
@@ -107,7 +116,7 @@ function finishEditing(event, formSelector, inputName, source, originData, id) {
     event.preventDefault();
     const data = {};
     const input = $(formSelector).find('[name="'+inputName+'"]');
-    const validatesInputs = ['plan_name', 'plan_description', 'day_name', 'exercise_name'];
+    const validatesInputs = ['plan_name', 'plan_description', 'day_name', 'exercise_name', 'user_name'];
     data[inputName] = input.val();
     data['id'] = id;
     const rules = {};
@@ -123,7 +132,7 @@ function finishEditing(event, formSelector, inputName, source, originData, id) {
             target: 190
         }];
     }
-    if (source === 'user') {
+    if (inputName === 'user_email' || inputName === 'email') {
         rules['user_email'] = [
             {
                 type: 'email'
@@ -150,10 +159,16 @@ function finishEditing(event, formSelector, inputName, source, originData, id) {
         }
     }
     if ($.app.get('helper').validate(formSelector, rules)) {
-        $.app.get('loader').request(source, data, null, 'put', callBack,
-            function (input, originData, formSelector) {
-                $(formSelector).find('[name="' + inputName + '"]').val(originData);
-            }.bind(this, [formSelector, inputName, originData]), false);
+        const callBackError = function(e) {
+            if (e.responseJSON.errors) {
+                Object.keys(e.responseJSON.errors).map(function(input) {
+                    if ($('[name='+input+']')) {
+                        $.app.get('helper').appendError($('.edit-plan-name-description'), input, e.responseJSON.errors[input][0]);
+                    }
+                });
+            }
+        }.bind(source);
+        $.app.get('loader').request(source, data, null, 'put', callBack, callBackError, false);
     }
 }
 
@@ -251,9 +266,20 @@ function deleteAction(source, id) {
         case 'user': {
             route = 'users';
             callBack = function() {
-                $('#user'+id).remove();
+                $('#user_'+id).remove();
                 $('.confirm-modal').modal('toggle').remove();
             }.bind(id);
+            break;
+        }
+        case 'user_plan': {
+            route = 'plans/user';
+            const oldId = id;
+            id = id.replace('_','/');
+            callBack = function() {
+                console.log(oldId);
+                $('#user_plan_'+oldId).remove();
+                $('.confirm-modal').modal('toggle').remove();
+            }.bind(oldId);
             break;
         }
     }
@@ -275,4 +301,9 @@ function backToUsersPlans(user_id) {
 
 function inviteToProgram (user_id, plan_id) {
     console.log(user_id, plan_id);
+    const data = {
+        user_id: user_id,
+        plan_id: plan_id,
+    };
+    $.app.get('loader').request('invite', data, null, 'post', null, null, false);
 }

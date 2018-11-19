@@ -21,14 +21,14 @@ class Helper {
                                     case '>': {
                                         if (formInput.value.trim().length < rule.target) {
                                             errors[formInput.name] = $.app.get('helper').ucfirst(formInput.name.replace('_', ' ')) + ' should be greater than ' + (+rule.target - 1);
-                                            $.app.get('helper').appendError(formObject, formInput, errors[formInput.name]);
+                                            $.app.get('helper').appendError(formObject, formInput.name, errors[formInput.name]);
                                         }
                                         break;
                                     }
                                     case '<': {
                                         if (formInput.value.trim().length > rule.target) {
                                             errors[formInput.name] = $.app.get('helper').ucfirst(formInput.name.replace('_', ' ')) + ' should be less than ' + rule.target;
-                                            $.app.get('helper').appendError(formObject, formInput, errors[formInput.name]);
+                                            $.app.get('helper').appendError(formObject, formInput.name, errors[formInput.name]);
                                         }
                                         break;
                                     }
@@ -38,7 +38,7 @@ class Helper {
                             case 'email': {
                                 if (!$.app.get('helper').validateEmail(formInput.value.trim())) {
                                     errors[formInput.name] = 'Invalid Email';
-                                    $.app.get('helper').appendError(formObject, formInput, errors[formInput.name]);
+                                    $.app.get('helper').appendError(formObject, formInput.name, errors[formInput.name]);
                                 }
                             }
                         }
@@ -50,9 +50,10 @@ class Helper {
         console.log(errors);
         return Object.keys(errors).length === 0;
     }
-    appendError(formObject, formInput, error) {
-        $.app.get('helper').clearError(formObject, formInput.name);
-        formObject.find('[name="'+formInput.name+'"]').closest('.form-group').append('<span class="error">'+error+'</span>');
+    appendError(formObject, inputName, error) {
+        console.log(formObject, inputName, error);
+        $.app.get('helper').clearError(formObject, inputName);
+        formObject.find('[name="'+inputName+'"]').closest('.form-group').append('<span class="error">'+error+'</span>');
     }
 
     clearError(formObject, inputName) {

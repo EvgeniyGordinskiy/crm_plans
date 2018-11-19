@@ -29,6 +29,7 @@ Route::group([
     Route::post('', ['as' => 'create', 'uses' => 'PlansController@create']);
     Route::put('', ['as' => 'edit', 'uses' => 'PlansController@edit']);
     Route::delete('{id}', ['as' => 'deletePlan', 'uses' => 'PlansController@delete']);
+    Route::delete('user/{pla_id}/{user_id}', ['as' => 'deleteUserPlan', 'uses' => 'PlansController@delete_user']);
 });
 
 /**
@@ -111,4 +112,5 @@ Route::group([
     'prefix' => 'invite',
 ], function(){
     Route::post('', ['as' => 'sendInvite', 'uses' => 'InviteController@send_invite']);
+    Route::post('check', ['as' => '.check', 'uses' => 'InviteController@check_token']);
 });

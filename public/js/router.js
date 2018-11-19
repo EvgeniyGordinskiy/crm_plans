@@ -13,19 +13,30 @@ const routes = {
 
 class Router {
     constructor() {
-        console.log(window.location);
+        const invRoute = 'invite?token=';
+
         const currentPage = window.location.href.substr(window.location.href.indexOf('#')+2);
-        console.log(currentPage);
-        let found = false;
-        Object.keys(routes).map(function(key){
-           if (routes[key].route === currentPage) {
-               found = true;
-           }
-        });
-        if (!found) {
-            this.redirect('plans');
+
+        if(currentPage.indexOf(invRoute) !== -1) {
+            const token = currentPage.substr(currentPage.indexOf(invRoute) + invRoute.length);
+            $.app.get('loader').request('invite/check', {token: token}, null, 'post', function () {
+                $.app.get('router').redirect('users');
+            }, function () {
+                $.app.get('router').redirect('plans');
+            });
         } else {
-            this.redirect(currentPage);
+            console.log(currentPage);
+            let found = false;
+            Object.keys(routes).map(function (key) {
+                if (routes[key].route === currentPage) {
+                    found = true;
+                }
+            });
+            if (!found) {
+                this.redirect('plans');
+            } else {
+                this.redirect(currentPage);
+            }
         }
     }
 
