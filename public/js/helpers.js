@@ -8,11 +8,8 @@ class Helper {
         const formObject = $(form);
         const formInputs = formObject.serializeArray();
         const errors = {};
-        console.log(rules);
         Object.keys(rules).map(function(inputName) {
             formInputs.map(function(formInput) {
-                console.log(formInput);
-                console.log(inputName);
                 if (formInput.name === inputName) {
                     rules[inputName].map(function (rule) {
                         switch (rule.type) {
@@ -47,11 +44,9 @@ class Helper {
                 }
             });
         });
-        console.log(errors);
         return Object.keys(errors).length === 0;
     }
     appendError(formObject, inputName, error) {
-        console.log(formObject, inputName, error);
         $.app.get('helper').clearError(formObject, inputName);
         formObject.find('[name="'+inputName+'"]').closest('.form-group').append('<span class="error">'+error+'</span>');
     }
@@ -122,7 +117,6 @@ class Helper {
         const input = $(formSelector).find('[name="'+inputName+'"]');
         const cancelButton = input.closest('.form-group').find('.cancelEditing');
         $.app.get('helper').cancelEditing(null, formSelector, inputName, value);
-        console.log(cancelButton);
         cancelButton.removeAttr('onclick');
         cancelButton.unbind('click');
         cancelButton.click(function(formSelector, inputName, value) {
@@ -136,14 +130,12 @@ class Helper {
         } else {
             plan_id = this.plan_id;
         }
-        console.log(plan_id);
         const days = $('.edit-plan-modal-days');
         days.sortable({
             items: '.day',
             axis: 'y',
             update: function (e, ui) {
                 const data = {};
-                console.log('!!!!!!!!', e, ui);
                 const idData = ui.item[0].getAttribute('id');
                 data['item_id'] = +idData.substring(idData.indexOf("_")+1);
                 data['parent_id'] = +plan_id;
@@ -151,7 +143,6 @@ class Helper {
                 const sortedItems = $('.edit-plan-modal-days').sortable("toArray");
                 sortedItems.map(function (item,i) {
                     item = item.substring(item.indexOf("_")+1);
-                    console.log(item);
                     if (+item === data.item_id) {
                         if (sortedItems[i+1]) {
                             data['before_item_id'] = sortedItems[i+1].substring(sortedItems[i+1].indexOf("_")+1);
@@ -181,7 +172,6 @@ class Helper {
                     $.app.get('helper').addExercise(null, null, true);
                 },
                 stop: function(e, ui) {
-                    console.log('exercise', e, ui);
                     $.app.get('helper').addExercise($(e.target).attr('id'), null);
                 },
                 helper: 'clone'
@@ -192,7 +182,6 @@ class Helper {
             day.sortable({
                 items: '.exercise',
                 update: function (e, ui) {
-                    console.log('day sort exercise',e,ui);
                     const data = {};
                     const idData = ui.item[0].getAttribute('id');
                     if (idData) {
@@ -202,7 +191,6 @@ class Helper {
                         const sortedItems = day.sortable("toArray");
                         sortedItems.map(function (item, i) {
                             item = item.substring(item.lastIndexOf("_") + 1);
-                            console.log(item);
                             if (+item === data.item_id) {
                                 if (sortedItems[i + 1]) {
                                     data['before_item_id'] = sortedItems[i + 1].substring(sortedItems[i + 1].lastIndexOf("_") + 1);
@@ -212,7 +200,6 @@ class Helper {
                                 }
                             }
                         });
-                        console.log(day.attr('id'));
                         $.app.get('loader').request('part/order', data, '.day-exercises-'+data['parent_id'], 'post', function () {
                             const buttonDay = $('.add-day-exercise-button-day');
                             const buttonExercise = $('.add-day-exercise-button-exercise');
@@ -228,9 +215,7 @@ class Helper {
             });
             day.droppable({
                 drop: function(e, ui) {
-                    console.log('day new exercise', e, ui);
                     $.app.get('helper').addExercise(null, $(e.target).attr('id'));
-                    // console.log($(e.target).attr('id'));
                 },
             });
         });

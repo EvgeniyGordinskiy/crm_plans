@@ -1,6 +1,4 @@
 
-console.log('loaded app');
-
 class App {
     constructor() {
         this.app = $('#app');
@@ -8,7 +6,6 @@ class App {
         this.pageHead = $('head')[0];
         this.pageContainer = this.app.find('#page-content-wrapper .container');
         this.instances = {};
-        console.log(this.pageContainer);
     }
 
     get(object) {

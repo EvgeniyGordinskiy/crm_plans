@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    console.log('plan connected');
     $('.edit-plan-modal-days').sortable();
 });
 
@@ -7,7 +6,6 @@ var modalCreateSelector;
 
 function openCreateModal(selector, source = 'plan', planId) {
     modalCreateSelector =  selector;
-    console.log(selector);
     const data = {
         source: source
     };
@@ -32,7 +30,6 @@ function openEditModal (selector, planId, source = 'plan') {
 function saveForm(source, formSelector, type, id, planId) {
     const data = {};
     const rules = {};
-    console.log(source);
     const inputWithValidating = ['name', 'description'];
     $(formSelector).serializeArray().map(function (input) {
         data[source+ '_' +input.name] = input.value;
@@ -196,7 +193,6 @@ function planEditCallBack(inputName, value, id) {
 
 function userEditCallBack(formSelector, inputName, value, id) {
     const users = $('.user');
-    console.log(formSelector, inputName, value)
     $.app.get('helper').refreshOnCliickListener(formSelector, inputName, value);
     Object.keys(users).map(function (key) {
         const input = $(users[key]).find('[name="user_id"]');
@@ -215,7 +211,6 @@ function userEditCallBack(formSelector, inputName, value, id) {
             }
         }
     });
-    console.log(inputName, value);
     $.app.get('helper').cancelEditing(null, '.edit-plan-name-description', inputName, value);
 }
 
@@ -276,7 +271,6 @@ function deleteAction(source, id) {
             const oldId = id;
             id = id.replace('_','/');
             callBack = function() {
-                console.log(oldId);
                 $('#user_plan_'+oldId).remove();
                 $('.confirm-modal').modal('toggle').remove();
             }.bind(oldId);
@@ -300,7 +294,6 @@ function backToUsersPlans(user_id) {
 }
 
 function inviteToProgram (user_id, plan_id) {
-    console.log(user_id, plan_id);
     const data = {
         user_id: user_id,
         plan_id: plan_id,

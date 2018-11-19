@@ -25,7 +25,6 @@ class Router {
                 $.app.get('router').redirect('plans');
             });
         } else {
-            console.log(currentPage);
             let found = false;
             Object.keys(routes).map(function (key) {
                 if (routes[key].route === currentPage) {
@@ -41,7 +40,6 @@ class Router {
     }
 
     redirect(page) {
-        console.log(page);
         if (Object.keys(routes).includes(page)) {
             $.app.get('loader').request(routes[page].route);
             $.app.get('loader').insertJsAndCSSFiles(routes[page]);

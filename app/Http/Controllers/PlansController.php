@@ -51,6 +51,9 @@ class PlansController extends Controller
     {
         $user = User::whereId($user_id)->firstOrFail();
         $plans =  $user->plans;
+        foreach($plans as $plan) {
+            $plan->user_id = $user_id;
+        }
         $view = view('parts.plan-view-body', ['plans' => $plans])->render();
         return $this->respondWithData($view);
     }

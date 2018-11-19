@@ -21,7 +21,6 @@ $(document).ready(function () {
             isClosed = true;
         }
     }
-    console.log($.app.get('router'));
     $('[data-toggle="offcanvas"]').click(function () {
         $('#app').toggleClass('toggled');
     });

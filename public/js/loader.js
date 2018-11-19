@@ -1,15 +1,12 @@
 
 class Load {
     request(page, data = {}, parent = null, method = 'get', callback = null, callbackError = null, append = true, removeBefore = null) {
-        console.log(data);
         $.ajax({
             url: '/api/'+page,
             type: method,
             data: data,
             success: function(res) {
-                console.log(res);
                 $.app.get('loader').lastResponse = res;
-                console.log(append, removeBefore);
                 if (append === true) {
                     if (parent && $(parent)) {
                         if (removeBefore) {
@@ -28,7 +25,6 @@ class Load {
                 }
             },
             error: function(xhr) {
-                console.log(xhr);
                 if (callbackError) {
                     callbackError(xhr);
                 }
