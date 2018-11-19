@@ -54,7 +54,7 @@ class PlansController extends Controller
         foreach($plans as $plan) {
             $plan->user_id = $user_id;
         }
-        $view = view('parts.plan-view-body', ['plans' => $plans])->render();
+        $view = view('parts.plan-view-body', ['plans' => $plans, 'user_id' => $user_id])->render();
         return $this->respondWithData($view);
     }
 
