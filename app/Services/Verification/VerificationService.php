@@ -76,6 +76,9 @@ class VerificationService
         return false;
     }
 
+    /**
+     * @param array $playload
+     */
     public static function setPlayload( Array $playload)
     {
         self::$playload = json_encode($playload);

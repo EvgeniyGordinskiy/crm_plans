@@ -305,5 +305,7 @@ function inviteToProgram (user_id, plan_id) {
         user_id: user_id,
         plan_id: plan_id,
     };
-    $.app.get('loader').request('invite', data, null, 'post', null, null, false);
+    $.app.get('loader').request('invite', data, null, 'post', function () {
+        console.log($.app.get('loader').lastResponse.data);
+    }, null, false);
 }

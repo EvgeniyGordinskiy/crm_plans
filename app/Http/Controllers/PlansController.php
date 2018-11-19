@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\DB;
 
 class PlansController extends Controller
 {
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function index()
     {
         $plans =  DB::table('plans')->get();
@@ -18,6 +22,11 @@ class PlansController extends Controller
         return $this->respondWithData($view);
     }
 
+    /**
+     * @param null $user_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function preview($user_id = null)
     {
         $usersPlans = [];
@@ -33,7 +42,11 @@ class PlansController extends Controller
         return $this->respondWithData($view);
     }
 
-
+    /**
+     * @param $user_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function users_plans($user_id)
     {
         $user = User::whereId($user_id)->firstOrFail();
@@ -42,6 +55,11 @@ class PlansController extends Controller
         return $this->respondWithData($view);
     }
 
+    /**
+     * @param CreatePlanRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function create(CreatePlanRequest $request)
     {
         $plan = new Plan();
@@ -57,6 +75,11 @@ class PlansController extends Controller
         return $this->respondWithError();
     }
 
+    /**
+     * @param EditPlanRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function edit(EditPlanRequest $request)
     {
         $plan = Plan::find($request->id);
@@ -78,6 +101,10 @@ class PlansController extends Controller
         return $this->respondWithData($view);
     }
 
+    /**
+     * @param AddUserRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function add_user(AddUserRequest $request)
     {
         UserPlans::create([
@@ -88,6 +115,11 @@ class PlansController extends Controller
         return $this->respondCreated();
     }
 
+    /**
+     * @param $planId
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete_user($planId, $userId)
     {
         $planUser = UserPlans::wherePlanId($planId)->whereUserId($userId)->firstOrFail();
@@ -95,6 +127,10 @@ class PlansController extends Controller
         return $this->respondWithSuccess('ok');
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete($id)
     {
         $plan = Plan::whereId($id)->firstOrFail();

@@ -7,18 +7,24 @@ use App\Models\ExerciseInstances;
 
 class ExercisesController extends Controller
 {
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         return $this->respondWithData(ExerciseInstances::all());
     }
 
+    /**
+     * @param CreateExerciseRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function create_edit(CreateExerciseRequest $request)
     {
         $exercise = new Exercise();
         if ($request->id) {
             $exercise = Exercise::whereId($request->id)->firstOrFail();
-//            $exIns = ExerciseInstances::whereExerciseId($exercise->id)->wherePlanId($request->plan_id)->firstOrFail();
-//            $exercise->inst_id = $exIns->id;
             $exercise->update(['exercise_name' => $request->exercise_name]);
         } else {
             $exercise->exercise_name = $request->exercise_name;
@@ -31,6 +37,10 @@ class ExercisesController extends Controller
         return $this->respondWithError();
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete($id)
     {
         $ex = Exercise::whereId($id)->firstOrFail();

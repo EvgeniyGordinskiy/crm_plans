@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\DB;
 
 Class PartsController extends Controller
 {
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function create_plan_exercise()
     {
         $type = $_GET['type'] ?? 'create';
@@ -39,6 +43,11 @@ Class PartsController extends Controller
         return $this->respondWithData($view);
     }
 
+    /**
+     * @param $plan_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function edit_plan($plan_id)
     {
         $item = Plan::whereId($plan_id)->firstOrFail();
@@ -49,6 +58,11 @@ Class PartsController extends Controller
         return $this->respondWithData($view);
     }
 
+    /**
+     * @param $user_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function edit_user($user_id)
     {
         $item = User::whereId($user_id)->firstOrFail();
@@ -61,6 +75,11 @@ Class PartsController extends Controller
         return $this->respondWithData($view);
     }
 
+    /**
+     * @param ChangeOrderRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function change_order(ChangeOrderRequest $request)
     {
         if ($request->resource === 'day') {
@@ -95,6 +114,12 @@ Class PartsController extends Controller
         return $this->respondWithData($view);
     }
 
+    /**
+     * @param $source
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function confirm_modal($source, $id)
     {
         if (!$source || !$id) {

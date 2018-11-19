@@ -12,6 +12,11 @@ use App\Services\Verification\VerificationService;
 
 class InviteController extends Controller
 {
+    /**
+     * @param SendInviteRequest $request
+     * @param InviteService $inviteService
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function send_invite(SendInviteRequest $request, InviteService $inviteService)
     {
         $user = User::find($request->user_id);
@@ -30,6 +35,10 @@ class InviteController extends Controller
         return $this->respondWithError();
     }
 
+    /**
+     * @param CheckTokenRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function check_token(CheckTokenRequest $request)
     {
         $result = VerificationService::checkToken($request->token);
@@ -37,5 +46,5 @@ class InviteController extends Controller
             return $this->respondWithError('Token is Expired', 401);
         }
         return $this->respondWithSuccess('ok');
-;    }
+    }
 }

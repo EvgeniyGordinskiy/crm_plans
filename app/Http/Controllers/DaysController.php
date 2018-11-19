@@ -15,6 +15,11 @@ class DaysController extends Controller
         return $this->respondWithData(PlanDays::wherePlanId($plan_id)->get());
     }
 
+    /**
+     * @param CreateDayRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function create_edit(CreateDayRequest $request)
     {
         $day = new PlanDays();
@@ -40,6 +45,11 @@ class DaysController extends Controller
         return $this->respondWithError();
     }
 
+    /**
+     * @param AddExerciseRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function add_exercise(AddExerciseRequest $request)
     {
         $exerciseInst = new ExerciseInstances();
@@ -57,6 +67,10 @@ class DaysController extends Controller
         return $this->respondWithError();
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete_day_exercise($id)
     {
         $dayE = ExerciseInstances::whereId($id)->firstOrFail();
@@ -64,6 +78,10 @@ class DaysController extends Controller
         return $this->respondWithSuccess('ok');
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete_day($id)
     {
         $day = PlanDays::whereId($id)->firstOrFail();

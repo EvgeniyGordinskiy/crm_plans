@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function index()
     {
         $users =  DB::table('users')->paginate(15);
@@ -15,6 +19,11 @@ class UsersController extends Controller
         return $this->respondWithData($view);
     }
 
+    /**
+     * @param CreateUserRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function create(CreateUserRequest $request)
     {
         $user = new User([
@@ -28,6 +37,11 @@ class UsersController extends Controller
         return $this->respondWithError();
     }
 
+    /**
+     * @param EditUserRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function edit(EditUserRequest $request)
     {
         $user = User::find($request->id);
@@ -50,6 +64,10 @@ class UsersController extends Controller
         return $this->respondWithData($view);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete($id)
     {
         $user = User::whereId($id)->firstOrFail();
