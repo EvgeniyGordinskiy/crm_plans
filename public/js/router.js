@@ -16,7 +16,6 @@ class Router {
         const invRoute = 'invite?token=';
 
         const currentPage = window.location.href.substr(window.location.href.indexOf('#')+2);
-
         if(currentPage.indexOf(invRoute) !== -1) {
             const token = currentPage.substr(currentPage.indexOf(invRoute) + invRoute.length);
             $.app.get('loader').request('invite/check', {token: token}, null, 'post', function () {

@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    $.app.get('loader');
+    $.app.get('helper');
+    $.app.get('router');
     $('.edit-plan-modal-days').sortable();
 });
 
