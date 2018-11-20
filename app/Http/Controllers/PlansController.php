@@ -31,8 +31,8 @@ class PlansController extends Controller
     {
         $usersPlans = [];
         if ($user_id) {
-            $usersPansSubsjects = DB::select(DB::raw("SELECT plan_id as id, user_id from user_plans where user_id = $user_id"));
-            foreach ($usersPansSubsjects as $plan) {
+            $usersPlansSubsjects = DB::select(DB::raw("SELECT plan_id as id, user_id from user_plans where user_id = $user_id"));
+            foreach ($usersPlansSubsjects as $plan) {
                 $usersPlans[] = $plan->id;
             }
         }

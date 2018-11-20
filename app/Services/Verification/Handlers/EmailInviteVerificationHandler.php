@@ -6,6 +6,7 @@ use App\Mail\InviteMail;
 use App\Models\Invite;
 use App\Models\User;
 use App\Models\UsersVerification;
+use App\Services\Invite\InviteService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -45,14 +46,12 @@ class EmailInviteVerificationHandler implements VerificationHandler
         if (!$verification) throw new \Exception('Verification not found');
         $payload = json_decode($verification->playload);
         $invite = Invite::find($payload->invite_id);
+        $inviteType = $invite->type;
         $params = json_decode($invite->params);
-        if ((!$invite->model_name || !$invite->model_method) && $invite->redirect_path) {
-            throw new \Exception('Wrong invites parameters');
-        }
-        if($invite->model_name && $invite->model_method) {
-            $class = $invite->model_name;
+        $class = InviteService::get_model($inviteType);
+        $method = InviteService::get_method($inviteType);
+        if($class && $method) {
             $object = new $class();
-            $method = $invite->model_method;
             $request = false;
             if (isset($params->plan_id)) {
                 $request =  new AddUserRequest();
@@ -67,12 +66,12 @@ class EmailInviteVerificationHandler implements VerificationHandler
             } else {
                 throw new \Exception();
             }
-        }
-        try{
-            $invite->delete();
-            $verification->delete();
-        }catch(\Exception $e) {
-            Log::emergency($e->getMessage().'; line: '.$e->getLine());
+            try{
+                $invite->delete();
+                $verification->delete();
+            }catch(\Exception $e) {
+                Log::emergency($e->getMessage().'; line: '.$e->getLine());
+            }
         }
     }
 }
