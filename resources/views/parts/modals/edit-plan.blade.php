@@ -36,7 +36,7 @@
                         </div>
                         <div class="form-group  col-sm-6">
                             <div class="buttons-block-edit">
-                                <h5 class="modal-title">{{$source === 'plan' ? 'Difficulty' : $source === 'user' ? 'Email' : ''}}</h5>
+                                <h5 class="modal-title">@if($source === 'plan') Difficulty @endif @if ($source === 'user') Email @endif</h5>
                                 <button class="btn btn-primary buttons-block-edit-pencil"
                                         type="button"
                                         onclick="$.app.get('helper').startEditing(event, '.edit-plan-name-description', '{{$source === 'plan' ? 'plan_difficulty' : 'user_email'}}')">
